@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Kennedy Family Recipe App">
-    <meta name="author" content="Patrick Kennedy">
-    <title>Kennedy Family Recipe App</title>
-    <!-- styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  </head>
-  <body>
- 
-<h1>Welcome to the Kennedy Family Recipe App!</h1>
- 
- 
-This site describes our favorite family recipes!
- 
- 
-<h2>Breakfast Recipes</h2>
- 
- 
-<h2>Lunch Recipes</h2>
- 
- 
-<h2>Dinner Recipes</h2>
- 
- 
-<h2>Dessert Recipes</h2>
- 
-  </body>
-</html>
+      <head>
+         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+      </head>
+      <body>
+         <!-- Main jumbotron for a primary marketing message or call to action -->
+         <div class="jumbotron">
+            <div class="container">
+               <br />
+               {% if not short_url %}
+               <div class="row">
+                  <div class="col-md-offset-5 col-md-3">
+                     <h4>URL to shorten.</h4>
+                     <form method="post" class="navbar-form navbar-right" action="">
+                        <div class="form-group">
+                           <input type="text" id="url" name="url" class="form-control input-lg chat-input" placeholder="URL" />
+                           <button type="submit" class="btn btn-lg btn-info">Submit</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+               {% else %}
+               <div>
+                  Result, the shortened URL is: <a href="{{short_url}}"> {{short_url}}</a>
+               </div>
+               {% endif %}
+            </div>
+      </body>
+   </html>
