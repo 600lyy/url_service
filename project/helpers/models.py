@@ -31,6 +31,9 @@ class UrlTable(BaseModel):
 
 
 def create_tables(tables=None, reset=False):
+    """
+    # This function is to create a new table in the database
+    """
     if tables is None:
         logger.warn('No table to create')
         return
