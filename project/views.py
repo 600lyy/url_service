@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect
+from datetime import datetime
 from . import app
-from .helpers.utilities import url_checker
+from .helpers.utilities import url_checker, logger
+from .helpers.models import UrlTable
 
 
 host = 'http://localhost:5000/'
@@ -15,12 +17,32 @@ def home():
     """
     if request.method == "POST":
         original_url = str(request.form.get('url'))
-        url = original_url if 'http://' in original_url else ''.join(['http://', original_url])
-        is_valid = url_checker(url)
-        if is_valid is True:
-            return render_template('home.html', short_url=host)
+        stored_url = (
+            UrlTable
+            .select()
+            .where(UrlTable.long_url == original_url)
+        )
+        if not stored_url.exists(): 
+            url = original_url if 'http://' in original_url else ''.join(['http://', original_url])
+            is_valid = url_checker(url)
+            if is_valid is True:
+                short_url = 'ly.gz'
+                try:
+                    UrlTable.create(
+                        long_url=original_url,
+                        short_url=short_url,
+                        created_utc=datetime.utcnow()
+                    )
+                    return render_template('home.html', short_url=short_url)
+                except Exception as e:
+                    logger.warning("Cannot save {} to the database".format(original_url))
+                    return render_template('home.html')
+            else:
+                return render_template("home.html")
         else:
-            return render_template("home.html")
+            short_url = stored_url[0].short_url
+            logger.info("{} found in the database, no need to insert again".format(short_url))
+            return render_template('home.html', short_url=short_url)
     return render_template("home.html")
 
 
@@ -30,4 +52,14 @@ def redirect_short_url(short_url):
     # this function is to redirect the short url to its long url
     # if the match is found in the database, otherwise it returns 403 error
     """
-    return redirect("http://www.google.se")
+    stored_url = (
+        UrlTable
+        .select()
+        .where(UrlTable.short_url == short_url)
+    )
+    if not stored_url.exists():
+        logger.warning("{} not found in the database".format(short_url))
+        return render_template("home.html")
+    url = ''.join(['http://', stored_url[0].long_url])
+    logger.info("{} found in the database, redirecting to {}".format(short_url, url))
+    return redirect(url)
