@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect
 from datetime import datetime
 from . import app
-from .helpers.utilities import url_checker, logger
+from .helpers.utilities import url_checker, logger, short_string_generator
 from .helpers.models import UrlTable
 
 
@@ -23,10 +23,13 @@ def home():
             .where(UrlTable.long_url == original_url)
         )
         if not stored_url.exists(): 
-            url = original_url if 'http://' in original_url else ''.join(['http://', original_url])
+            if 'http://' in original_url or'https://' in original_url:
+                url = original_url
+            else:
+                url = ''.join(['http://', original_url])
             is_valid = url_checker(url)
             if is_valid is True:
-                short_url = 'ly.gz'
+                short_url = short_string_generator()
                 try:
                     UrlTable.create(
                         long_url=original_url,
@@ -38,7 +41,7 @@ def home():
                     logger.warning("Cannot save {} to the database".format(original_url))
                     return render_template('home.html')
             else:
-                return render_template("home.html")
+                return render_template("home.html", error_msg=True)
         else:
             short_url = stored_url[0].short_url
             logger.info("{} found in the database, no need to insert again".format(short_url))
@@ -59,7 +62,11 @@ def redirect_short_url(short_url):
     )
     if not stored_url.exists():
         logger.warning("{} not found in the database".format(short_url))
-        return render_template("home.html")
-    url = ''.join(['http://', stored_url[0].long_url])
+        return render_template("404.html")
+    long_url = stored_url[0].long_url
+    if 'http://' in long_url or 'https://' in long_url:
+        url = long_url
+    else:
+        url = ''.join(['http://', long_url])
     logger.info("{} found in the database, redirecting to {}".format(short_url, url))
     return redirect(url)

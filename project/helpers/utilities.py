@@ -1,5 +1,7 @@
 import datetime
 import logging
+import random
+import string
 import requests
 from requests import (HTTPError, ConnectionError, Timeout, RequestException)
 from logging.handlers import RotatingFileHandler
@@ -53,3 +55,11 @@ def url_checker(long_url):
         return False
     except RequestException as e:
         logger.warning("HTTP towards {} encouunters {}".format(long_url, str(e)))
+
+
+def short_string_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    """
+    # This function generates random string with size 6 by default
+    """
+    short_url = ''.join(random.choice(chars) for x in range(size))
+    return short_url

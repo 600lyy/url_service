@@ -19,6 +19,9 @@
                            <button type="submit" class="btn btn-lg btn-info">Submit</button>
                         </div>
                      </form>
+                     {% if error_msg %}
+                     <h5 style="color:Tomato;">URL is not valid, try again.</h5>
+                     {% endif %}
                   </div>
                </div>
                {% else %}
