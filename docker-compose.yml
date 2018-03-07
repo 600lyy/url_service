@@ -1,0 +1,23 @@
+url_shortener:
+  restart: always
+  build: .
+  container_name: url_shortener
+  links:
+    - postgres:postgres
+  tty: true
+  stdin_open: true
+  ports:
+    - 5000:5000
+    - 5432:5432
+postgres:
+  restart: always
+  image: postgres:latest
+  container_name: postgres
+  ports:
+    - 5433:5432
+data:
+  restart: always
+  image: postgres:latest
+  container_name: data
+  volumes:
+    - /var/lib/postgresql

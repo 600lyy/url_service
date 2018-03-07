@@ -5,11 +5,12 @@ Date: Feb 25 2018
 """
 
 from flask import Flask
-from peewee import PostgresqlDatabase
+from peewee import PostgresqlDatabase, OperationalError
 from .helpers.settings import SETTINGS
 from .helpers.settings import DB
 from .helpers.models import create_tables
 from .helpers.models import UrlTable
+from .helpers.utilities import logger
 
 
 """
@@ -17,7 +18,11 @@ Configuration of the app
 """
 
 app = Flask(__name__)
-create_tables(tables=[ UrlTable ])
+try:
+    create_tables(tables=[ UrlTable ])
+except OperationalError as e:
+    logger.warning("Cannot Create Table, Reason: {}".format(str(e)))
+
 
 @app.before_request
 def _db_connect():
