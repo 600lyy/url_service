@@ -27,6 +27,6 @@ $ ALTER USER postgres PASSWORD 'passwd'
 
 # Running the environment
 
-Docker and docker-compose must be installed in your machine, after that, run this command `docker-compose build && docker-compose up -d`.
-Wait 2 seconds for postgresql container to be ready.
-The url shortener can be accessed via http://localhost:5000/
+- Docker and docker-compose must be installed in your machine, after that, run this command `docker-compose build && docker-compose up -d`.
+- Wait 2 seconds for postgresql container to be ready.
+- The url shortener can be accessed via http://localhost:5000/
