@@ -1,23 +1,21 @@
-url_shortener:
-  restart: always
-  build: .
-  container_name: url_shortener
-  links:
-    - postgres:postgres
-  tty: true
-  stdin_open: true
-  ports:
-    - 5000:5000
-    - 5432:5432
-postgres:
-  restart: always
-  image: postgres:latest
-  container_name: postgres
-  ports:
-    - 5433:5432
-data:
-  restart: always
-  image: postgres:latest
-  container_name: data
-  volumes:
-    - /var/lib/postgresql
+version: '2'
+services:
+  url_shortener:
+    restart: always
+    build: .
+    container_name: url_shortener
+    tty: true
+    network_mode: host
+    stdin_open: true
+    depends_on:
+      - postgres
+    ports:
+      - 5000:5000
+    command: ["python3", "run.py"]
+  postgres:
+    restart: always
+    image: postgres:latest
+    container_name: postgres
+    network_mode: host
+    ports:
+      - 5432:5432

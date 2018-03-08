@@ -1,5 +1,5 @@
-# url_service
-A web application based on microservice architecture using flask
+# url_shortener
+Building docker-compose based Microservices for a Flask web application
 
 # Requirements
 
@@ -10,7 +10,6 @@ To build a user-facing web service that takes a URL and provides a shorter URL, 
 - Visiting the shortened URL should redirect the visitor to the long URL
 - You should provide source code as well as a link to a running instance of your service
 - You do, of course, not need to register a short domain name
-- Please include your thoughts on how to deploy your service in a production environment as well as how you would scale it to millions of users
 
 
 ## Database Setup:
@@ -28,4 +27,6 @@ $ ALTER USER postgres PASSWORD 'passwd'
 
 # Running the environment
 
-You need to have Docker installed in your machine, after that, just run this command `docker-compose build && docker-compose up -d`.
+Docker and docker-compose must be installed in your machine, after that, run this command `docker-compose build && docker-compose up -d`.
+Wait 2 seconds for postgresql container to be ready.
+The url shortener can be accessed via http://localhost:5000/
