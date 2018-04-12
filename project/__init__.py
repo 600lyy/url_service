@@ -19,8 +19,9 @@ Configuration of the app
 """
 
 app = Flask(__name__)
+#  app.config.from_pyfile("./helpers/settings.py")
+time.sleep(2) #  wait 2 seconds for the postgresql container to start properly
 try:
-    time.sleep(2) #  wait 2 seconds for the postgresql container to start properly
     create_tables(tables=[ UrlTable ])
 except OperationalError as e:
     logger.warning("Cannot Create Table, Reason: {}".format(str(e)))
